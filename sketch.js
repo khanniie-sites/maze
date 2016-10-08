@@ -1,23 +1,38 @@
 var maze;
-var blockAmt = 20;
+var totWidth = 500;
+var totHeight = 500;
+var blockAmt = 50;
 var scribble;
+var input, button, reGenerate;
 
 
 function setup() {
 
     // Create object
     maze = new Maze;
-    createCanvas(510, 510);
+    createCanvas(510, 700);
     scribble = new Scribble();
     drawMaze(maze);
+
+
+  button = createButton('Generate a New Maze!');
+  button.position(20, 530);
+  button.mousePressed(regenerateMaze);
+
+  // textAlign(CENTER);
+  // textSize(50);
+
+}
+
+function regenerateMaze(){
+background(240, 240, 240);
+maze = new Maze();
+drawMaze(maze);
 
 }
 
 function draw() {
 
-
-
-  
 }
 
 function drawMaze(m) {
@@ -30,6 +45,13 @@ function drawMaze(m) {
             if (temp.isWall[1]) { scribble.scribbleLine(temp.x - temp.width / 2, temp.y + temp.height / 2, temp.x + temp.width / 2, temp.y + temp.height / 2); }
             if (temp.isWall[2]) { scribble.scribbleLine(temp.x - temp.width / 2, temp.y - temp.height / 2, temp.x - temp.width / 2, temp.y + temp.height / 2); }
             if (temp.isWall[3]) { scribble.scribbleLine(temp.x + temp.width / 2, temp.y - temp.height / 2, temp.x + temp.width / 2, temp.y + temp.height / 2); }
+            if (temp.startPlace) {
+              console.log("isstart");
+                fill(0, 0, 0);
+                //rect(temp.x - temp.width / 2, temp.y - temp.height / 2, temp.x + temp.width / 2, temp.y + temp.height / 2);
+                rect(20, 20, 40, 40);
+            }
+
         }
     }
 }
@@ -47,7 +69,11 @@ function Maze() {
         }
         this.grid.push(row);
     }
-
+    var startPlace = [Math.floor(random(blockAmt)), Math.floor(random(blockAmt))];
+    this.grid[startPlace[0], startPlace[1]].startPlace = true;
+    console.log(this.grid[startPlace[0], startPlace[1]].startPlace);
+    var finishPlace = [Math.floor(random(blockAmt)), Math.floor(random(blockAmt))];
+    this.grid[finishPlace[0], finishPlace[1]].finishPlace = true;
     carveMaze(this);
 
 }
@@ -60,7 +86,7 @@ function carveMaze(m) {
     var i = 0;
     m.grid[currentPos[0]][currentPos[1]].visted = true;
 
-    while (!finished && i < 2000) {
+    while (!finished && i < blockAmt*100) {
         var success = false;
 
         var randomNum = [0, 1, 2, 3];
@@ -111,7 +137,7 @@ function carveMaze(m) {
         if (currentPos[0] == m.startPos[0] && currentPos[1] == m.startPos[1]) { finished = true; }
 
 
-        console.log("i:  " + i + "  Current position: " + currentPos + " Last pos: " + lastGoodPos);
+        //console.log("i:  " + i + "  Current position: " + currentPos + " Last pos: " + lastGoodPos);
         i++;
     }
 }
@@ -145,6 +171,9 @@ function Cell(xcoor, ycoor, wid, hei) {
     this.visited = false;
     this.width = wid;
     this.height = hei;
+    this.startPlace = false;
+    this.finishPlace = false;
+    this.onPath = false;
     this.x = xcoor;
     this.y = ycoor;
 }
