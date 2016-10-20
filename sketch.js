@@ -20,7 +20,7 @@ function setup() {
   button.position(20, 560);
   button.mousePressed(regenerateMaze);
 
-  rSlider = createSlider(0, 60, 25);
+  rSlider = createSlider(3, 60, 25);
   rSlider.position(275, 595);   
 
   label = text("Change the maze complexity,", 235, 550);
