@@ -1,9 +1,9 @@
 var maze;
 var totWidth = 500;
 var totHeight = 500;
-var blockAmt = 50;
+var blockAmt = 25;
 var scribble;
-var input, button, reGenerate;
+var input, button, button2, rSlider, label, label2;
 
 
 function setup() {
@@ -15,9 +15,19 @@ function setup() {
     drawMaze(maze);
 
 
+
   button = createButton('Generate a New Maze!');
-  button.position(20, 530);
+  button.position(20, 560);
   button.mousePressed(regenerateMaze);
+
+  rSlider = createSlider(0, 60, 25);
+  rSlider.position(275, 595);   
+
+  label = text("Change the maze complexity,", 235, 550);
+  label2 = text("then hit apply!", 250, 570);
+  button2 = createButton('Apply!');
+  button2.position(430, 560);
+  button2.mousePressed(regenerateMaze);
 
   // textAlign(CENTER);
   // textSize(50);
@@ -27,12 +37,14 @@ function setup() {
 function regenerateMaze(){
 background(240, 240, 240);
 maze = new Maze();
+label = text("Change the maze complexity,", 235, 550);
+  label2 = text("then hit apply!", 250, 570);
 drawMaze(maze);
 
 }
 
 function draw() {
-
+    blockAmt = rSlider.value();
 }
 
 function drawMaze(m) {
@@ -46,7 +58,6 @@ function drawMaze(m) {
             if (temp.isWall[2]) { scribble.scribbleLine(temp.x - temp.width / 2, temp.y - temp.height / 2, temp.x - temp.width / 2, temp.y + temp.height / 2); }
             if (temp.isWall[3]) { scribble.scribbleLine(temp.x + temp.width / 2, temp.y - temp.height / 2, temp.x + temp.width / 2, temp.y + temp.height / 2); }
             if (temp.startPlace) {
-              console.log("isstart");
                 fill(0, 0, 0);
                 //rect(temp.x - temp.width / 2, temp.y - temp.height / 2, temp.x + temp.width / 2, temp.y + temp.height / 2);
                 rect(20, 20, 40, 40);
@@ -58,6 +69,8 @@ function drawMaze(m) {
 
 // Maze class
 function Maze() {
+
+
     this.startPos = [2, 2];
     this.wid = 500;
     this.hei = 500;
@@ -71,7 +84,7 @@ function Maze() {
     }
     var startPlace = [Math.floor(random(blockAmt)), Math.floor(random(blockAmt))];
     this.grid[startPlace[0], startPlace[1]].startPlace = true;
-    console.log(this.grid[startPlace[0], startPlace[1]].startPlace);
+    //console.log(this.grid[startPlace[0], startPlace[1]].startPlace);
     var finishPlace = [Math.floor(random(blockAmt)), Math.floor(random(blockAmt))];
     this.grid[finishPlace[0], finishPlace[1]].finishPlace = true;
     carveMaze(this);
@@ -86,7 +99,7 @@ function carveMaze(m) {
     var i = 0;
     m.grid[currentPos[0]][currentPos[1]].visted = true;
 
-    while (!finished && i < blockAmt*100) {
+    while (!finished && i < blockAmt*200) {
         var success = false;
 
         var randomNum = [0, 1, 2, 3];
